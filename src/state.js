@@ -25,7 +25,7 @@ function initData(vm) {
 
   // data可能是一个函数，也可能是一个对象
   // 如果是函数的话要拿到返回值，对象的话就不用处理
-  data = typeof data === "function" ? data.call(vm) : data;
+  vm._data = data = typeof data === "function" ? data.call(vm) : data;
 
   // 对数据进行观测
   observe(data);
