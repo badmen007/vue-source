@@ -1,35 +1,58 @@
+import { arrayMethods } from "./array";
+
 class Observer {
   constructor(value) {
-    this.walk(value)
+    Object.defineProperty(value, "__ob__", {
+      value: this,
+      // 不能被循环出来
+      enumerable: false,
+      configurable: false,
+    });
+    if (Array.isArray(value)) {
+      value.__proto__ = arrayMethods;
+      // 要对数组中的每一项都进行观测
+      this.observeArray(value);
+    } else {
+      this.walk(value);
+    }
+  }
+  observeArray(value) {
+    value.forEach((item) => {
+      observe(item);
+    });
   }
   walk(data) {
-    const keys = Object.keys(data)
-    keys.forEach(key => {
-      defineReactive(data, key, data[key])
-    })
+    const keys = Object.keys(data);
+    keys.forEach((key) => {
+      defineReactive(data, key, data[key]);
+    });
   }
 }
 
 function defineReactive(data, key, value) {
   // 如果数据中的值是对象 要观测
-  observe(value)
+  observe(value);
   Object.defineProperty(data, key, {
     get() {
-      return value
+      return value;
     },
     set(newVal) {
-      if (newVal === value) return
+      if (newVal === value) return;
       // 如果用户设置的值是对象类型的话，也要观测
-      observe(newVal)
-      value = newVal // 这里为什么没有用data[key]的形式 如果用了就死循环了
-    }
-  })
+      observe(newVal);
+      value = newVal; // 这里为什么没有用data[key]的形式 如果用了就死循环了
+    },
+  });
 }
 
 export function observe(data) {
   // 要看是不是对象，不是对象就不进行观测
   if (typeof data !== "object" || data === null) {
-    return;
+    return data;
+  }
+
+  if (data.__ob__) {
+    return data
   }
 
   new Observer(data);
