@@ -1,13 +1,9 @@
+import { defineProperty } from "../util";
 import { arrayMethods } from "./array";
 
 class Observer {
   constructor(value) {
-    Object.defineProperty(value, "__ob__", {
-      value: this,
-      // 不能被循环出来
-      enumerable: false,
-      configurable: false,
-    });
+    defineProperty(value, '__ob__', this)
     if (Array.isArray(value)) {
       value.__proto__ = arrayMethods;
       // 要对数组中的每一项都进行观测
