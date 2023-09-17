@@ -1,21 +1,41 @@
-
 export function patch(oldVnode, vnode) {
-  const el = createElm(vnode)
-  const parentElm = oldVnode.parentNode
-  parentElm.insertBefore(el, oldVnode.nextSibling)
+  const el = createElm(vnode);
+  const parentElm = oldVnode.parentNode;
+  parentElm.insertBefore(el, oldVnode.nextSibling);
   parentElm.removeChild(oldVnode);
-  return el
+  return el;
 }
 
 function createElm(vnode) {
-  const { tag, children, key, data, text } = vnode
-  if (typeof tag === 'string') {
-    vnode.el = document.createElement(tag)
-    children.forEach(child => { // 遍历儿子将儿子渲染出的结果渲染到父亲中
-      vnode.el.appendChild(createElm(child))
-    })
+  const { tag, children, key, data, text } = vnode;
+  if (typeof tag === "string") {
+    vnode.el = document.createElement(tag);
+
+    updateProps(vnode);
+
+    children.forEach((child) => {
+      // 遍历儿子将儿子渲染出的结果渲染到父亲中
+      vnode.el.appendChild(createElm(child));
+    });
   } else {
-    vnode.el = document.createTextNode(text)
+    vnode.el = document.createTextNode(text);
   }
-  return vnode.el
+  return vnode.el;
+}
+
+function updateProps(vnode) {
+  const el = vnode.el;
+  let newProps = vnode.data || {};
+
+  for (let key in newProps) {
+    if (key === "style") {
+      for (let styleName in newProps.style) {
+        el.style[styleName] = newProps.style[styleName];
+      }
+    } else if (key === "class") {
+      el.className = el.class;
+    } else {
+      el.setAttribute(key, newProps[key]);
+    }
+  }
 }
