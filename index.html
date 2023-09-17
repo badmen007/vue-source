@@ -7,14 +7,20 @@
   </head>
   <body>
     <div id="app" style="color: red;">
-      <div id="my">hello {{school.name}} {{school.age}} <span>world</span></div>
+      <p>hello word</p>
+      <li>
+        {{school.name}}
+      </li>
+       <li>
+        {{school.age}}
+      </li>
     </div>
     <script src="dist/umd/vue.js"></script>
     <script>
       const vm = new Vue({
         el: "#app",
         data() {
-          return { arr: [1, 2, 3], school: {name: 'xz', age: 20} };
+          return { arr: [1, 2, 3], school: {name: 'xz', age: 20, a: 10} };
         },
         // render(h) {
         //   return h('div', { id: 'a'}, 'hello')
