@@ -10,5 +10,8 @@ export function compileToFunctions(template) {
   // 2.优化静态节点
   // 3.通过这颗树，重新生成代码
   const code = generate(ast)
-  console.log(code)
+  
+  // 4.将字符串变成函数
+  let render = new Function(`with(this){return ${code}}`)
+
 }
