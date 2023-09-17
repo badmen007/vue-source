@@ -13,5 +13,5 @@ export function compileToFunctions(template) {
   
   // 4.将字符串变成函数
   let render = new Function(`with(this){return ${code}}`)
-
+  return render
 }
