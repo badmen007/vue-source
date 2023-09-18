@@ -14,7 +14,6 @@ const methods = [
 
 methods.forEach((method) => {
   arrayMethods[method] = function (...args) {
-    console.log("数组方法被调用了");
     const result = oldArrayProtoMethods[method].apply(this, args); // 这里的this是谁 就是调用方法的那个数组
     let inserted;
     switch (method) {
