@@ -7,12 +7,8 @@
   </head>
   <body>
     <div id="app" style="color: red;">
-      <p>hello word</p>
       <li style="color: skyblue;">
-        {{school.name}}
-      </li>
-       <li>
-        {{school.age}}
+        {{arr}}
       </li>
     </div>
     <script src="dist/umd/vue.js"></script>
@@ -30,15 +26,14 @@
       const vm = new Vue({
         el: "#app",
         data() {
-          return { arr: [1, 2, 3], school: {name: 'xz', age: 20, a: 10} };
+          return { arr: [1, 2, 3], a: 1};
         },
         created() {
           console.log('created3')
         }
       });
       setTimeout(() => {
-        vm.school.name = '1212'
-        // 数据变化要自动调用 vm._update(vm._render()) 重新渲染更新
+        vm.arr.push({a: 1})  // 通过数组更新索引和长度更新是无效的
       }, 1000)
     </script>
   </body>
