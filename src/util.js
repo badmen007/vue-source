@@ -74,3 +74,44 @@ export function mergeOptions(parent, child) {
 
   return options
 }
+
+
+let callbacks = []
+let timerFunc;
+let pending = false
+function flushCallbacks() {
+  while(callbacks.length) {
+    const cb = callbacks.pop()
+    cb()
+  }
+  pending = false
+}
+if (Promise) {
+  timerFunc = () => {
+    Promise.resolve().then(flushCallbacks)
+  }
+} else if (MutationObserver) { // 可以监控dom的变化
+  let observe = new MutationObserver(flushCallbacks)
+  let textNode = document.createTextNode(1)
+  observe.observe(textNode, { characterData: true})
+  timerFunc = () => {
+    textNode.textContent = 2
+  }
+} else if (setImmediate) {
+  timerFunc = () => {
+    setImmediate(flushCallbacks)
+  }
+} else {
+  timerFunc = () => {
+    setTimeout(flushCallbacks)
+  }
+}
+
+
+export function nextTick(cb) { // 异步只需要一次
+  callbacks.push(cb)
+  if (!pending) {
+    timerFunc() // 异步方法做了兼容处理
+    pending = true
+  }
+}

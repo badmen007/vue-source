@@ -18,7 +18,7 @@ export function mountComponent(vm, el) {
   }
   // 要把属性和watcher对应  初始化的时候就会创建
   new Watcher(vm, updateComponent, () => {
-    callHook(vm, 'beforeUpdate')
+    callHook(vm, 'updated')
   }, true)
 
   callHook(vm, 'mounted')

@@ -30,10 +30,20 @@
         },
         created() {
           console.log('created3')
+        },
+        updated() {
+          console.log('updated')
         }
       });
+      // nextTick等待页面更新好了之后,再去获取最终dom
       setTimeout(() => {
         vm.arr.push({a: 1})  // 通过数组更新索引和长度更新是无效的
+        vm.arr.push({a: 1})
+        vm.arr.push({a: 1})
+        vm.arr.push({a: 1})
+        vm.$nextTick(() => {
+          console.log(vm.$el.innerHTML)
+        })
       }, 1000)
     </script>
   </body>
