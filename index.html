@@ -36,9 +36,10 @@
           console.log('created3')
         }
       });
-
-      vm.school.name = '1212'
-      vm._update(vm._render())
+      setTimeout(() => {
+        vm.school.name = '1212'
+        // 数据变化要自动调用 vm._update(vm._render()) 重新渲染更新
+      }, 1000)
     </script>
   </body>
 </html>
