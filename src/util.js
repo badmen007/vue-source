@@ -31,8 +31,8 @@ const strates = {}
 strates.data = function (parentVal, childVal) {
   return childVal; // 这里有data的合并操作
 };
-strates.computed = function () {};
-strates.watch = function () {};
+// strates.computed = function () {};
+// strates.watch = function () {};
 
 function mergeHook(parentVal, childVal) {
   if (childVal) {

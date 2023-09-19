@@ -1,4 +1,5 @@
 import { observe } from "./observer/index";
+import Watcher from "./observer/watcher";
 import { nextTick, proxy } from "./util";
 
 export function initState(vm) {
@@ -39,10 +40,43 @@ function initData(vm) {
 
 function initMethods() {}
 function initComputed() {}
-function initWatch() {}
+function initWatch(vm) {
+  const watch = vm.$options.watch
+  for(let key in watch) {
+    const handler = watch[key] // handler可能是数组、函数、对象、字符串
+
+    if (Array.isArray(handler)) { // 处理数组
+      handler.forEach(handle => {
+        createWatcher(vm, key, handle); 
+      })
+    } else {
+      createWatcher(vm, key, handler) // 处理函数、对象、字符串类型的
+    }
+  }
+}
+
+function createWatcher(vm, exprOrFn, handler, options = {}) { // options可以标识是用户watcher
+  if (typeof handler === 'object') {
+    options = handler
+    handler = handler.handler
+  }
+
+  if (typeof handler === 'string') {
+    handler = vm[handler]
+  }
+
+  return vm.$watch(exprOrFn, handler, options)
+}
 
 export function stateMixin(Vue) {
   Vue.prototype.$nextTick = function (cb) {
     nextTick(cb)
+  }
+  Vue.prototype.$watch = function (exprOrFn, cb, options) {
+    const watcher = new Watcher(this, exprOrFn, cb, {...options, user: true})
+
+    if (options.immediate) {
+      cb()
+    }
   }
 }

@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Document</title>
+  </head>
+  <body>
+    <!-- <script src="https://cdn.jsdelivr.net/npm/vue@2.7.14/dist/vue.js"></script> -->
+    <script src="dist/umd/vue.js"></script>
+    <div id="app">
+      {{a}}
+    </div>
+    <script>
+      let vm = new Vue({
+        el: "#app",
+        data: { a: {a : { a: 1}} },
+        methods: {
+          aa() {
+            console.log(100)
+          }
+        },
+        watch: {
+          // 1. key, value形式
+          // 2. key, value是数组
+          // 3. 监控实例上的方法
+          // 4. handler方法
+          // 'a'(newValue, oldValue) { // 对象没有老的
+          //   console.log(newValue)
+          // }
+          // 'a': [
+          //   (newValue, oldValue) => {
+          //     console.log(newValue)
+          //   },
+          //   (newValue, oldValue) => {
+          //     console.log(newValue)
+          //   }
+          // ]
+          // 'a': 'aa'
+          'a.a.a': {
+            handler(newValue, oldValue) {
+              console.log(newValue, oldValue)
+            },
+          }
+        },
+      });
+      vm.a.a.a = 100
+      setTimeout(() => {
+        vm.a.a.a = 200
+      })
+    </script>
+  </body>
+</html>
