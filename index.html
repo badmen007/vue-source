@@ -6,45 +6,9 @@
     <title>Vue</title>
   </head>
   <body>
-    <div id="app" style="color: red;">
-      <li style="color: skyblue;">
-        {{arr}}
-      </li>
-    </div>
     <script src="dist/umd/vue.js"></script>
     <script>
-      Vue.mixin({
-        created() {
-          console.log('created1')
-        }
-      })
-      Vue.mixin({
-        created() {
-          console.log('created2')
-        }
-      })
-      const vm = new Vue({
-        el: "#app",
-        data() {
-          return { arr: [1, 2, 3], a: 1};
-        },
-        created() {
-          console.log('created3')
-        },
-        updated() {
-          console.log('updated')
-        }
-      });
-      // nextTick等待页面更新好了之后,再去获取最终dom
-      setTimeout(() => {
-        vm.arr.push({a: 1})  // 通过数组更新索引和长度更新是无效的
-        vm.arr.push({a: 1})
-        vm.arr.push({a: 1})
-        vm.arr.push({a: 1})
-        vm.$nextTick(() => {
-          console.log(vm.$el.innerHTML)
-        })
-      }, 1000)
+      
     </script>
   </body>
 </html>

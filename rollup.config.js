@@ -17,7 +17,6 @@ export default {
       open: true,
       port: 3000, // 打开的浏览器端口号是3000
       contentBase: "", // 以哪个文件夹作为静态服务 为空表示默认当前目录下的html
-      openPage: '/watch.html'
     }),
   ],
 };
