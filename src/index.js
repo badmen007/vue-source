@@ -18,17 +18,27 @@ initGlobalApi(Vue)
 
 
 const vm1 = new Vue({data: {name: 'xz'}})
-let render1 = compileToFunctions(`<div id='a' style="color: red;" class="a">{{name}}</div>`)
+let render1 = compileToFunctions(`<div>
+  <li style='background: red' key="A">A</li>
+  <li style='background: yellow' key="B">B</li>
+  <li style='background: pink' key="C">C</li>
+  <li style='background: green' key="D">D</li>
+</div>`);
 let vnode1 = render1.call(vm1)
 document.body.appendChild(createElm(vnode1));
 
 
 const vm2 = new Vue({ data: { name: "aj" } })
-let render2 = compileToFunctions(`<div id='b' style="background: blue" class="a">{{name}}</div>`);
+let render2 = compileToFunctions(`<div>
+  <li style='background: green' key="D">D</li>
+  <li style='background: pink' key="C">C</li>
+  <li style='background: yellow' key="B">B</li>
+  <li style='background: red' key="A">A</li>
+</div>`);
 let vnode2 = render2.call(vm2);
 
 setTimeout(() => {
   patch(vnode1, vnode2);
-}, 1000)
+}, 3000)
 
 export default Vue;
