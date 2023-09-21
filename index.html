@@ -8,36 +8,39 @@
   <body>
     <div id="app">
       <span>ll</span>
-      <div>{{fullName}}</div>
+      <div>{{name}}</div>
+      <my-button></my-button>
     </div>
     <script src="dist/umd/vue.js"></script>
+    <!-- 为什么要拆分成小组件 1. 实现复用 2. 方便维护 3. 编写组件能拆分的尽量拆分-->
+    <!-- vue更新问题，每个组件是一个watcher, 可以减少比对 -->
     <script>
+      // 全局组件
+      Vue.component('my-button', { // Vue.extend
+        template: '<button>点我</button>'
+      })
+      Vue.component('aa', { // Vue.extend
+        template: '<button>点我</button>'
+      })
       const vm = new Vue({
         el: '#app',
+        components: {
+          aa: {
+            template: '<div>aa</div>'
+          },
+          bb: {
+            template: '<div>bb</div>'
+          }
+        },
         data() {
           return {
+            name: 'xz',
             firstName: '李',
             lastName: '四'
           }
         },
-        // computed是一个watcher
-        computed: {
-          // 根据计算属性
-          fullName() {
-            console.log('会执行吗')
-            return this.firstName + this.lastName
-          }
-          // fullName: {
-          //   get() {
-
-          //   },
-          //   set() {
-
-          //   }
-          // }
-        }
       })
-      vm.firstName = 'lili'
+      console.log(vm)
     </script>
   </body>
 </html>

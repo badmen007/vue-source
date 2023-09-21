@@ -28,6 +28,15 @@ const LIFECYCLE_HOOKS = [
   "destroyed",
 ];
 const strates = {}
+strates.components = function (parentVal, childVal) {
+  const res = Object.create(parentVal)
+  if (childVal) {
+    for(let key in childVal) {
+      res[key] = childVal[key]
+    }
+  }
+  return res
+}
 strates.data = function (parentVal, childVal) {
   return childVal; // 这里有data的合并操作
 };
@@ -68,7 +77,11 @@ export function mergeOptions(parent, child) {
     if (strates[key]) {
       options[key] = strates[key](parent[key], child[key])
     } else {
-      options[key] = child[key]
+      if (child[key]) {
+        options[key] = child[key];
+      } else {
+        options[key] = parent[key]
+      }
     }
   }
 
