@@ -1,3 +1,4 @@
+import Dep from "./observer/dep";
 import { observe } from "./observer/index";
 import Watcher from "./observer/watcher";
 import { nextTick, proxy } from "./util";
@@ -39,7 +40,51 @@ function initData(vm) {
 }
 
 function initMethods() {}
-function initComputed() {}
+function initComputed(vm) {
+  const computed = vm.$options.computed
+  // 1.需要有watcher 2.需要defineProperty 3.dirty
+  const watchers = vm._computedWatchers = {} 
+  for(let key in computed) {
+    const userDef = computed[key]
+    const getter = typeof userDef === 'function' ? userDef : userDef.get
+    watchers[key] = new Watcher(vm, getter, () => {}, { lazy: true})
+    defineComputed(vm, key, userDef)
+  }
+}
+
+function defineComputed(target, key, userDef) {
+  const sharedPropertyDefinition = {
+    enumerable: true,
+    configurable: true,
+    get: () => {},
+    set: () => {}
+  };
+  if (typeof userDef === 'function') {
+    sharedPropertyDefinition.get = createComputedGetter(key)
+  } else {
+    sharedPropertyDefinition.get = createComputedGetter(key) // 需要加缓存
+    sharedPropertyDefinition.set = userDef.set
+  }
+
+  Object.defineProperty(target, key, sharedPropertyDefinition);
+}
+
+function createComputedGetter(key) {
+  return function () {
+    const watcher = this._computedWatchers[key]
+    if (watcher) {
+      if (watcher.dirty) {
+        watcher.evaluate()
+      }
+      // 在上面计算值完成之后，当前的Dep.target是渲染watcher 让计算属性依赖的dep收集渲染watcher页面就能刷行
+      if (Dep.target) {
+        watcher.depend()
+      }
+      return watcher.value
+    }
+  }
+}
+
 function initWatch(vm) {
   const watch = vm.$options.watch
   for(let key in watch) {

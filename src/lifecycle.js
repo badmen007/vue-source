@@ -4,7 +4,14 @@ import { patch } from "./vdom/patch"
 export function lifecycleMixin(Vue) {
   Vue.prototype._update = function (vnode) {
     const vm = this
-    vm.$el = patch(vm.$el, vnode)
+    // 首次渲染还是更新
+    const prevVnode = vm._vnode
+    if (!prevVnode) {
+      vm.$el = patch(vm.$el, vnode)
+    } else {
+      vm.$el = patch(prevVnode, vnode)
+    }
+    vm._node = vnode;
   }
 }
 

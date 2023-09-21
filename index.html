@@ -6,9 +6,38 @@
     <title>Vue</title>
   </head>
   <body>
+    <div id="app">
+      <span>ll</span>
+      <div>{{fullName}}</div>
+    </div>
     <script src="dist/umd/vue.js"></script>
     <script>
-      
+      const vm = new Vue({
+        el: '#app',
+        data() {
+          return {
+            firstName: '李',
+            lastName: '四'
+          }
+        },
+        // computed是一个watcher
+        computed: {
+          // 根据计算属性
+          fullName() {
+            console.log('会执行吗')
+            return this.firstName + this.lastName
+          }
+          // fullName: {
+          //   get() {
+
+          //   },
+          //   set() {
+
+          //   }
+          // }
+        }
+      })
+      vm.firstName = 'lili'
     </script>
   </body>
 </html>

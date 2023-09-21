@@ -3,59 +3,77 @@ import { popTarget, pushTarget } from "./dep";
 
 let id = 0
 class Watcher {
-  constructor(vm, exprOrFn, cb, options={}) {
+  constructor(vm, exprOrFn, cb, options = {}) {
     this.vm = vm;
     this.exprOrFn = exprOrFn;
     this.cb = cb;
     this.options = options;
     // 标识用户watcher
-    this.user = options.user
+    this.user = options.user;
+
+    this.lazy = options.lazy;
+    this.dirty = this.lazy;
 
     this.id = id++;
-    this.deps = []
-    this.depsId = new Set()
+    this.deps = [];
+    this.depsId = new Set();
 
-    if (typeof exprOrFn === 'function') {
-      this.getter = exprOrFn
+    if (typeof exprOrFn === "function") {
+      this.getter = exprOrFn;
     } else {
-      this.getter = function () { 
+      this.getter = function () {
         // 可能传递的是字符串
-        const path = exprOrFn.split('.')
-        let obj = vm
-        for(let i = 0; i < path.length; i++) {
-          obj = obj[path[i]]
+        const path = exprOrFn.split(".");
+        let obj = vm;
+        for (let i = 0; i < path.length; i++) {
+          obj = obj[path[i]];
         }
-        return obj
-      }
+        return obj;
+      };
     }
 
-    this.value = this.get()
+    this.value = this.lazy ? void 0 : this.get();
   }
   addDep(dep) {
-    let id = dep.id
+    let id = dep.id;
     if (!this.depsId.has(id)) {
-      this.deps.push(dep)
-      this.depsId.add(id)
-      dep.addSub(this)
+      this.deps.push(dep);
+      this.depsId.add(id);
+      dep.addSub(this);
     }
   }
   get() {
-    pushTarget(this)
-    let result = this.getter()
-    popTarget()
-    return result
+    pushTarget(this);
+    let result = this.getter.call(this.vm);
+    popTarget();
+    return result;
   }
   run() {
-    let newValue = this.get()
-    let oldValue = this.value
-    this.value = newValue // 更新一下老值
+    let newValue = this.get();
+    let oldValue = this.value;
+    this.value = newValue; // 更新一下老值
     if (this.user) {
-      this.cb.call(this.vm, newValue, oldValue)
+      this.cb.call(this.vm, newValue, oldValue);
     }
   }
   update() {
-    queueWatcher(this)
-    // this.get()
+    if (this.lazy) { // 计算属性更新的时候
+      this.dirty = true
+    } else {
+      queueWatcher(this);
+      // this.get()
+    }
+  }
+  evaluate() {
+    this.value = this.get()
+    this.dirty = false
+  }
+  depend() {
+    // 计算属性watcher
+    let i = this.deps.length
+    while(i--) {
+      this.deps[i].depend()
+    }
   }
 }
 let queue = [];
