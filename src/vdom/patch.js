@@ -1,4 +1,8 @@
 export function patch(oldVnode, vnode) {
+  if (!oldVnode) {
+    // 如果是组件的话 传递来的oldVnode是空的
+    return createElm(vnode);
+  }
   // 在初始化的时候，是直接将虚拟dom转换成真实dom
   if (oldVnode.nodeType === 1) {
     const el = createElm(vnode);
@@ -147,9 +151,27 @@ function updateChildren(oldChildren, newChildren, parent) {
   }
 }
 
+function createComponent(vnode) {
+  // 调用hook中的init方法
+  let i = vnode.data
+  if ((i = i.hook) && (i = i.init)) {
+    // 赋值完就是init方法
+    i(vnode)
+  }
+  if (vnode.componentInstance) {
+    return true
+  }
+}
+
 export function createElm(vnode) {
   const { tag, children, key, data, text } = vnode;
   if (typeof tag === "string") {
+
+    if (createComponent(vnode)) { // 组件渲染后的结果刚到当前组件的实例上 vm.$el
+
+      return vnode.componentInstance.$el
+    }
+
     vnode.el = document.createElement(tag);
 
     updateProps(vnode);

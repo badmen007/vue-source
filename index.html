@@ -11,6 +11,7 @@
       <div>{{name}}</div>
       <my-button></my-button>
       <aa></aa>
+      <cc></cc>
     </div>
     <script src="dist/umd/vue.js"></script>
     <!-- 为什么要拆分成小组件 1. 实现复用 2. 方便维护 3. 编写组件能拆分的尽量拆分-->
@@ -18,10 +19,13 @@
     <script>
       // 全局组件
       Vue.component('my-button', { // Vue.extend
-        template: '<button>点我</button>'
+        template: '<button>{{a}}</button>',
+        data() {
+          return {a: 1}
+        }
       })
-      Vue.component('aa', { // Vue.extend
-        template: '<button>点我</button>'
+      Vue.component('cc', { // Vue.extend
+        template: '<button>点我cc</button>'
       })
       const vm = new Vue({
         el: '#app',

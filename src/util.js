@@ -37,9 +37,9 @@ strates.components = function (parentVal, childVal) {
   }
   return res
 }
-strates.data = function (parentVal, childVal) {
-  return childVal; // 这里有data的合并操作
-};
+// strates.data = function (parentVal, childVal) {
+//   return childVal; // 这里有data的合并操作
+// };
 // strates.computed = function () {};
 // strates.watch = function () {};
 
