@@ -128,3 +128,16 @@ export function nextTick(cb) { // 异步只需要一次
     pending = true
   }
 }
+
+function makeMap(str) {
+  const mapping = {}
+  const list = str.split(',')
+  for(let i = 0; i < list.length; i++) {
+    mapping[list[i]] = true
+  }
+  return (key) => mapping[key]
+}
+
+export const isReservedTag = makeMap(
+  'a,div,img,image,text,span,p,button,input,textarea,ul,li'
+)

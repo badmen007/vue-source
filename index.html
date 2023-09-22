@@ -10,6 +10,7 @@
       <span>ll</span>
       <div>{{name}}</div>
       <my-button></my-button>
+      <aa></aa>
     </div>
     <script src="dist/umd/vue.js"></script>
     <!-- 为什么要拆分成小组件 1. 实现复用 2. 方便维护 3. 编写组件能拆分的尽量拆分-->
@@ -41,6 +42,7 @@
         },
       })
       console.log(vm)
+      // 组件可能是一个对象 也可能是一个构造函数
     </script>
   </body>
 </html>

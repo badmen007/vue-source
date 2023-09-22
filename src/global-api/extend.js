@@ -2,12 +2,14 @@ import { mergeOptions } from "../util"
 
 
 export default function initExtend(Vue) {
+  let cid = 0
   // 创建一个子类继承父类
   Vue.extend = function (extendOptions) {
     const Super = this
     const Sub = function VueComponent(options) {
       this._init(options)
     }
+    Sub.cid = cid++
     Sub.prototype = Object.create(Super.prototype)
     Sub.prototype.constructor = Sub
     // 处理其他属性 mixin component
